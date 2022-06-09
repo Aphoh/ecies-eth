@@ -19,3 +19,6 @@ generic-array = "0.14"
 k256 = "0.11"
 hmac = "0.12"
 subtle = "2.4"
+
+[dev-dependencies]
+hex-literal = "0.3"

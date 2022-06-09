@@ -137,8 +137,12 @@ pub fn decrypt(sk: &SecpSk, c: &[u8], s1: &[u8], s2: &[u8]) -> Result<Vec<u8>, E
 
 #[cfg(test)]
 mod tests {
+    use hex_literal::hex;
+
     use super::*;
-    const MSG: &[u8] = b"Super cool message";
+    const MSG: &[u8] = b"Hello, world";
+    const SK: [u8; 32] = hex!("eb2766b1ec61c2f377675819d1146ed9347c21834852a8ae4c1d8a2fe73fbc78");
+    const ENC: [u8; 125] = hex!("04b4aa7defba74951fdeca544386b095c8a9c9418913b6bbf5a89c2a2cb7b6bbc2a00f33a27489b7a221ed14765f1bcc8390344234f75a43d80fd50e043918f14e44f5ca357a90d99ad831e53c9b0ba5f015dba3a477c3c52c53bd002d5061c7263cdf87c00ef452902a6589a2d77dd160377bc2ac80f9a4213b5cad05");
 
     #[test]
     fn it_works() {
@@ -150,5 +154,13 @@ mod tests {
         let res = decrypt(&sk, &enc, &[], &[]).unwrap();
 
         assert_eq!(MSG, res);
+    }
+
+    #[test]
+    fn consistent_with_eth() {
+        let sk = SecpSk::from_be_bytes(&SK).unwrap();
+        let res = decrypt(&sk, &ENC, &[], &[]).unwrap();
+
+        assert_eq!(res, MSG);
     }
 }
